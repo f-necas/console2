@@ -33,7 +33,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import jakarta.mail.MessagingException;
+//import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -352,7 +352,7 @@ public final class NewAccountFormController {
             result.rejectValue("uid", "uid.error.exist", "the uid exist");
             return "createAccountForm";
 
-        } catch (DataServiceException | MessagingException e) {
+        } catch (DataServiceException e) {
 
             throw new IOException(e);
         }

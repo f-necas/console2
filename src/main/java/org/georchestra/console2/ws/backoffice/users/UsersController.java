@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import jakarta.mail.MessagingException;
+//import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -354,7 +354,7 @@ public class UsersController {
         // Verify that org is under delegation if user is not SUPERUSER
         final String requestOriginator = auth.getName();
         if (!callerIsSuperUser()) {
-            DelegationEntry delegation = this.delegationDao.findOne(requestOriginator);
+            DelegationEntry delegation = this.delegationDao.findByUid(requestOriginator);
             if (delegation != null && !Arrays.asList(delegation.getOrgs()).contains(account.getOrg()))
                 throw new AccessDeniedException("Org not under delegation");
         }
@@ -426,7 +426,7 @@ public class UsersController {
     @ResponseBody
     public Account update(@PathVariable String uid, HttpServletRequest request)
             throws IOException, NameNotFoundException, DataServiceException, DuplicatedEmailException, ParseException,
-            JSONException, MessagingException {
+            JSONException {
 
         if (this.userRule.isProtected(uid)) {
             throw new AccessDeniedException("The user is protected, it cannot be updated: " + uid);
@@ -443,7 +443,7 @@ public class UsersController {
 
         if (!modifiedAccount.getOrg().equals(originalAcount.getOrg())) {
             if (!auth.getAuthorities().contains(ROLE_SUPERUSER))
-                if (!Arrays.asList(this.delegationDao.findOne(auth.getName()).getOrgs())
+                if (!Arrays.asList(this.delegationDao.findByUid(auth.getName()).getOrgs())
                         .contains(originalAcount.getOrg()))
                     throw new AccessDeniedException("User not under delegation");
             orgDao.unlinkUser(originalAcount);
@@ -456,7 +456,7 @@ public class UsersController {
 
         if (!modifiedAccount.getOrg().equals(originalAcount.getOrg())) {
             if (!auth.getAuthorities().contains(ROLE_SUPERUSER))
-                if (!Arrays.asList(this.delegationDao.findOne(auth.getName()).getOrgs())
+                if (!Arrays.asList(this.delegationDao.findByUid(auth.getName()).getOrgs())
                         .contains(modifiedAccount.getOrg()))
                     throw new AccessDeniedException("User not under delegation");
             orgDao.linkUser(modifiedAccount);
@@ -478,7 +478,7 @@ public class UsersController {
         }
 
         if (accountDao.hasUserLoginChanged(originalAcount, modifiedAccount)) {
-            DelegationEntry delegationEntry = delegationDao.findOne(originalAcount.getUid());
+            DelegationEntry delegationEntry = delegationDao.findByUid(originalAcount.getUid());
             if (delegationEntry != null) {
                 delegationDao.delete(delegationEntry);
                 delegationEntry.setUid(modifiedAccount.getUid());
@@ -527,8 +527,8 @@ public class UsersController {
         roleDao.deleteUser(account);
 
         // Also delete delegation if exists
-        if (delegationDao.findOne(account.getUid()) != null) {
-            delegationDao.delete(account.getUid());
+        if (delegationDao.findByUid(account.getUid()) != null) {
+            delegationDao.deleteByUid(account.getUid());
         }
 
         // log when a user is removed according to pending status

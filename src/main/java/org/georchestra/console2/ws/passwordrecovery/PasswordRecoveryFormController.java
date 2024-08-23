@@ -22,7 +22,7 @@ package org.georchestra.console2.ws.passwordrecovery;
 import java.io.IOException;
 import java.util.UUID;
 
-import jakarta.mail.MessagingException;
+//import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -199,7 +199,7 @@ public class PasswordRecoveryFormController {
                 this.emailFactory.sendChangePasswordOAuth2Email(servletContext, account.getEmail(),
                         account.getCommonName());
             }
-        } catch (DataServiceException | MessagingException e) {
+        } catch (DataServiceException e) {
             throw new IOException(e);
         } catch (NameNotFoundException e) {
         }

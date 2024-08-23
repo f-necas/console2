@@ -381,7 +381,7 @@ public class OrgsController {
         // Filter results if user is not SUPERUSER
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!auth.getAuthorities().contains(ROLE_SUPERUSER)) {
-            String[] filteredIds = this.delegationDao.findOne(auth.getName()).getOrgs();
+            String[] filteredIds = this.delegationDao.findByUid(auth.getName()).getOrgs();
             if (filteredIds != null && filteredIds.length > 0) {
                 final Set<String> retain = Sets.newHashSet(filteredIds);
                 orgs = orgs.stream().filter(o -> retain.contains(o.getName())).collect(Collectors.toList());
@@ -435,7 +435,7 @@ public class OrgsController {
         // Verify authent context and that org is under delegation if user is not
         // SUPERUSER
         if (auth != null && auth.getName() != null && !auth.getAuthorities().contains(ROLE_SUPERUSER)) {
-            DelegationEntry delegation = this.delegationDao.findOne(auth.getName());
+            DelegationEntry delegation = this.delegationDao.findByUid(auth.getName());
             if (delegation != null) {
                 if (!Arrays.asList(delegation.getOrgs()).contains(org)) {
                     throw new AccessDeniedException("Org not under delegation");

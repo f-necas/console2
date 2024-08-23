@@ -23,9 +23,9 @@ import static java.util.Collections.singletonList;
 
 import java.util.List;
 
-import jakarta.mail.MessagingException;
-import jakarta.mail.Session;
-import jakarta.mail.internet.MimeMessage;
+//import jakarta.mail.MessagingException;
+//import jakarta.mail.Session;
+//import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.ServletContext;
 
 import org.georchestra.commons.configuration.GeorchestraConfiguration;
@@ -83,31 +83,31 @@ public class EmailFactory {
     private String administratorEmail;
 
     public void sendAccountWasCreatedEmail(ServletContext servletContext, String recipient, String userName, String uid)
-            throws MessagingException {
+             {
         sendAccountWasCreatedEmail(servletContext, recipient, userName, uid, true);
     }
 
     public void sendAccountWasCreatedEmail(ServletContext servletContext, String recipient, String userName, String uid,
-            boolean reallySend) throws MessagingException {
+            boolean reallySend)  {
         Email email = new Email(singletonList(recipient), this.accountWasCreatedEmailSubject, this.smtpHost,
                 this.smtpPort, this.emailHtml, this.replyTo, this.from, this.bodyEncoding, this.subjectEncoding,
                 this.templateEncoding, this.accountWasCreatedEmailFile, servletContext, this.georConfig, this.publicUrl,
                 this.instanceName);
         email.set("name", userName);
         email.set("uid", uid);
-        email.send(reallySend);
+//        email.send(reallySend);
     }
 
     /**
      * e-mail to the user to inform the account requires the moderator's validation
      */
     public void sendAccountCreationInProcessEmail(ServletContext servletContext, String recipient, String userName,
-            String uid) throws MessagingException {
+            String uid)  {
         sendAccountCreationInProcessEmail(servletContext, recipient, userName, uid, true);
     }
 
     public void sendAccountCreationInProcessEmail(ServletContext servletContext, String recipient, String userName,
-            String uid, boolean reallySend) throws MessagingException {
+            String uid, boolean reallySend)  {
 
         Email email = new Email(singletonList(recipient), this.accountCreationInProcessEmailSubject, this.smtpHost,
                 this.smtpPort, this.emailHtml, this.replyTo, this.from, this.bodyEncoding, this.subjectEncoding,
@@ -115,20 +115,20 @@ public class EmailFactory {
                 this.publicUrl, this.instanceName);
         email.set("name", userName);
         email.set("uid", uid);
-        email.send(reallySend);
+//        email.send(reallySend);
     }
 
     /**
      * emails to the moderator to inform that a new user is waiting authorization.
      */
     public void sendNewAccountRequiresModerationEmail(ServletContext servletContext, List<String> recipients,
-            String userName, String uid, String userEmail, String userOrg) throws MessagingException {
+            String userName, String uid, String userEmail, String userOrg)  {
         sendNewAccountRequiresModerationEmail(servletContext, recipients, userName, uid, userEmail, userOrg, true);
     }
 
     public void sendNewAccountRequiresModerationEmail(ServletContext servletContext, List<String> recipients,
             String userName, String uid, String userEmail, String userOrg, boolean reallySend)
-            throws MessagingException {
+             {
 
         Email email = new Email(recipients, this.newAccountRequiresModerationEmailSubject, this.smtpHost, this.smtpPort,
                 this.emailHtml, userEmail, // Reply-to
@@ -140,47 +140,47 @@ public class EmailFactory {
         email.set("uid", uid);
         email.set("email", userEmail);
         email.set("org", userOrg);
-        email.send(reallySend);
+//        email.send(reallySend);
     }
 
     public void sendChangePasswordEmail(ServletContext servletContext, String recipient, String userName, String uid,
-            String url) throws MessagingException {
+            String url)  {
         sendChangePasswordEmail(servletContext, recipient, userName, uid, url, true);
     }
 
     public void sendChangePasswordEmail(ServletContext servletContext, String recipient, String userName, String uid,
-            String url, boolean reallySend) throws MessagingException {
+            String url, boolean reallySend)  {
         Email email = new Email(singletonList(recipient), this.changePasswordEmailSubject, this.smtpHost, this.smtpPort,
                 this.emailHtml, this.replyTo, this.from, this.bodyEncoding, this.subjectEncoding, this.templateEncoding,
                 this.changePasswordEmailFile, servletContext, this.georConfig, this.publicUrl, this.instanceName);
         email.set("name", userName);
         email.set("uid", uid);
         email.set("url", url);
-        email.send(reallySend);
+//        email.send(reallySend);
     }
 
     public void sendChangePasswordOAuth2Email(ServletContext servletContext, String recipient, String userName)
-            throws MessagingException {
+             {
         sendChangePasswordOAuth2Email(servletContext, recipient, userName, true);
     }
 
     public void sendChangePasswordOAuth2Email(ServletContext servletContext, String recipient, String userName,
-            boolean reallySend) throws MessagingException {
+            boolean reallySend)  {
         Email email = new Email(singletonList(recipient), this.changePasswordOAuth2EmailSubject, this.smtpHost,
                 this.smtpPort, this.emailHtml, this.replyTo, this.from, this.bodyEncoding, this.subjectEncoding,
                 this.templateEncoding, this.changePasswordOAuth2EmailFile, servletContext, this.georConfig,
                 this.publicUrl, this.instanceName);
         email.set("name", userName);
-        email.send(reallySend);
+//        email.send(reallySend);
     }
 
     public void sendChangeEmailAddressEmail(ServletContext servletContext, String recipient, String userName,
-            String uid, String url) throws MessagingException {
+            String uid, String url)  {
         sendChangeEmailAddressEmail(servletContext, recipient, userName, uid, url, true);
     }
 
     public void sendChangeEmailAddressEmail(ServletContext servletContext, String recipient, String userName,
-            String uid, String url, boolean reallySend) throws MessagingException {
+            String uid, String url, boolean reallySend)  {
         Email email = new Email(singletonList(recipient), this.changeEmailAddressEmailSubject, this.smtpHost,
                 this.smtpPort, this.emailHtml, this.replyTo, this.from, this.bodyEncoding, this.subjectEncoding,
                 this.templateEncoding, this.changeEmailAddressEmailFile, servletContext, this.georConfig,
@@ -188,16 +188,16 @@ public class EmailFactory {
         email.set("name", userName);
         email.set("uid", uid);
         email.set("url", url);
-        email.send(reallySend);
+//        email.send(reallySend);
     }
 
     public void sendAccountUidRenamedEmail(ServletContext servletContext, String recipient, String userName, String uid)
-            throws MessagingException {
+             {
         sendAccountUidRenamedEmail(servletContext, recipient, userName, uid, true);
     }
 
     public void sendAccountUidRenamedEmail(ServletContext servletContext, String recipient, String userName, String uid,
-            boolean reallySend) throws MessagingException {
+            boolean reallySend)  {
 
         Email email = new Email(singletonList(recipient), this.accountUidRenamedEmailSubject, this.smtpHost,
                 this.smtpPort, this.emailHtml, this.replyTo, this.from, this.bodyEncoding, this.subjectEncoding,
@@ -205,16 +205,16 @@ public class EmailFactory {
                 this.instanceName);
         email.set("name", userName);
         email.set("uid", uid);
-        email.send(reallySend);
+//        email.send(reallySend);
     }
 
     public void sendNewAccountNotificationEmail(ServletContext servletContext, List<String> recipients, String fullName,
-            String uid, String emailAddress, String userOrg) throws MessagingException {
+            String uid, String emailAddress, String userOrg)  {
         sendNewAccountNotificationEmail(servletContext, recipients, fullName, uid, emailAddress, userOrg, true);
     }
 
     public void sendNewAccountNotificationEmail(ServletContext servletContext, List<String> recipients, String fullName,
-            String uid, String emailAddress, String userOrg, boolean reallySend) throws MessagingException {
+            String uid, String emailAddress, String userOrg, boolean reallySend)  {
 
         Email email = new Email(recipients, this.newAccountNotificationEmailSubject, this.smtpHost, this.smtpPort,
                 this.emailHtml, emailAddress, // Reply-to
@@ -228,12 +228,12 @@ public class EmailFactory {
             userOrg = "";
         }
         email.set("org", userOrg);
-        email.send(reallySend);
+//        email.send(reallySend);
     }
 
     public void sendNewOAuth2AccountNotificationEmail(List<String> recipients, String fullName, String localUid,
             String emailAddress, String providerName, String providerUid, String userOrg, boolean reallySend)
-            throws MessagingException {
+             {
 
         Email email = new Email(recipients, this.newOAuth2AccountNotificationEmailSubject, this.smtpHost, this.smtpPort,
                 this.emailHtml, emailAddress, // Reply-to
@@ -248,16 +248,16 @@ public class EmailFactory {
         email.set("org", userOrg);
         email.set("providerName", providerName);
         email.set("providerUid", providerUid);
-        email.send(reallySend);
+//        email.send(reallySend);
     }
 
-    public MimeMessage createEmptyMessage() {
+/*    public MimeMessage createEmptyMessage() {
         // Instanciate MimeMessage
         final Session session = Session.getInstance(System.getProperties(), null);
         session.getProperties().setProperty("mail.smtp.host", this.smtpHost);
         session.getProperties().setProperty("mail.smtp.port", (new Integer(this.smtpPort)).toString());
         return new MimeMessage(session);
-    }
+    }*/
 
     /*
      * Setters for unit tests

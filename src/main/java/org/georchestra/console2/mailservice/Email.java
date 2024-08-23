@@ -25,13 +25,13 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jakarta.mail.Message;
-import jakarta.mail.MessagingException;
-import jakarta.mail.Session;
-import jakarta.mail.Transport;
-import jakarta.mail.internet.AddressException;
-import jakarta.mail.internet.InternetAddress;
-import jakarta.mail.internet.MimeMessage;
+//import jakarta.mail.Message;
+//import jakarta.mail.MessagingException;
+//import jakarta.mail.Session;
+//import jakarta.mail.Transport;
+//import jakarta.mail.internet.AddressException;
+//import jakarta.mail.internet.InternetAddress;
+//import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.ServletContext;
 
 import org.apache.commons.io.FileUtils;
@@ -131,55 +131,55 @@ public class Email {
         return body;
     }
 
-    public MimeMessage send() throws MessagingException {
-        return this.send(true);
-    }
-
-    public MimeMessage send(boolean reallySend) throws MessagingException {
-
-        // Replace {publicUrl} token with the configured public URL
-        this.emailBody = this.emailBody.replaceAll("\\{publicUrl\\}", publicUrl);
-        this.emailBody = this.emailBody.replaceAll("\\{instanceName\\}", instanceName);
-        LOG.debug("body: " + this.emailBody);
-
-        final Session session = Session.getInstance(System.getProperties(), null);
-        session.getProperties().setProperty("mail.smtp.host", smtpHost);
-        session.getProperties().setProperty("mail.smtp.port", (new Integer(smtpPort)).toString());
-
-        final MimeMessage message = new MimeMessage(session);
-
-        if (isValidEmailAddress(from)) {
-            message.setFrom(new InternetAddress(from));
-        }
-        InternetAddress[] recipientAddress = new InternetAddress[recipients.size()];
-        int counter = 0;
-        for (String recipient : recipients) {
-            if (!isValidEmailAddress(recipient))
-                throw new AddressException("Invalid recipient : " + recipient);
-            recipientAddress[counter] = new InternetAddress(recipient.trim());
-            counter++;
-        }
-        message.setRecipients(Message.RecipientType.TO, recipientAddress);
-        if (isValidEmailAddress(replyTo)) {
-            message.setReplyTo(new InternetAddress[] { new InternetAddress(replyTo) });
-        }
-
-        message.setSubject(subject, subjectEncoding);
-
-        if (this.emailBody != null) {
-            if (emailHtml) {
-                message.setContent(this.emailBody, "text/html; charset=" + bodyEncoding);
-            } else {
-                message.setContent(this.emailBody, "text/plain; charset=" + bodyEncoding);
-            }
-        }
-
-        // Finally send the message
-        if (reallySend)
-            Transport.send(message);
-        LOG.debug("email has been sent to:\n" + recipients.stream().collect(Collectors.joining(",")));
-        return message;
-    }
+//    public MimeMessage send() throws MessagingException {
+//        return this.send(true);
+//    }
+//
+//    public MimeMessage send(boolean reallySend) throws MessagingException {
+//
+//        // Replace {publicUrl} token with the configured public URL
+//        this.emailBody = this.emailBody.replaceAll("\\{publicUrl\\}", publicUrl);
+//        this.emailBody = this.emailBody.replaceAll("\\{instanceName\\}", instanceName);
+//        LOG.debug("body: " + this.emailBody);
+//
+//        final Session session = Session.getInstance(System.getProperties(), null);
+//        session.getProperties().setProperty("mail.smtp.host", smtpHost);
+//        session.getProperties().setProperty("mail.smtp.port", (new Integer(smtpPort)).toString());
+//
+//        final MimeMessage message = new MimeMessage(session);
+//
+//        if (isValidEmailAddress(from)) {
+//            message.setFrom(new InternetAddress(from));
+//        }
+//        InternetAddress[] recipientAddress = new InternetAddress[recipients.size()];
+//        int counter = 0;
+//        for (String recipient : recipients) {
+//            if (!isValidEmailAddress(recipient))
+//                throw new AddressException("Invalid recipient : " + recipient);
+//            recipientAddress[counter] = new InternetAddress(recipient.trim());
+//            counter++;
+//        }
+//        message.setRecipients(Message.RecipientType.TO, recipientAddress);
+//        if (isValidEmailAddress(replyTo)) {
+//            message.setReplyTo(new InternetAddress[] { new InternetAddress(replyTo) });
+//        }
+//
+//        message.setSubject(subject, subjectEncoding);
+//
+//        if (this.emailBody != null) {
+//            if (emailHtml) {
+//                message.setContent(this.emailBody, "text/html; charset=" + bodyEncoding);
+//            } else {
+//                message.setContent(this.emailBody, "text/plain; charset=" + bodyEncoding);
+//            }
+//        }
+//
+//        // Finally send the message
+//        if (reallySend)
+//            Transport.send(message);
+//        LOG.debug("email has been sent to:\n" + recipients.stream().collect(Collectors.joining(",")));
+//        return message;
+//    }
 
     private static boolean isValidEmailAddress(String address) {
         if (address == null) {

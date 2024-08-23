@@ -49,7 +49,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import jakarta.mail.MessagingException;
+//import jakarta.mail.MessagingException;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -132,11 +132,11 @@ public class ChangeEmailFormController {
             BindingResult result, SessionStatus sessionStatus) throws DataServiceException, IOException {
 
         // email validation
-        if (validation.validateUserFieldWithSpecificMsg("newEmail", formBean.getNewEmail(), result)
+  /*      if (validation.validateUserFieldWithSpecificMsg("newEmail", formBean.getNewEmail(), result)
                 && !EmailValidator.getInstance().isValid(formBean.getNewEmail())) {
             result.rejectValue("newEmail", "email.error.invalidFormat", "Invalid Format");
             return "changeEmailForm";
-        }
+        }*/
 
         String newEmail = formBean.getNewEmail();
 
@@ -161,6 +161,7 @@ public class ChangeEmailFormController {
 
         String url = makeChangeEmailURL(publicUrl, publicContextPath, token);
 
+/*
         try {
             ServletContext servletContext = request.getSession().getServletContext();
             this.emailFactory.sendChangeEmailAddressEmail(servletContext, newEmail, account.getCommonName(),
@@ -170,6 +171,7 @@ public class ChangeEmailFormController {
         } catch (MessagingException e) {
             throw new IOException(e);
         }
+*/
 
         LOG.debug(AdminLogType.EMAIL_CHANGE_EMAIL_SENT + " from " + account.getUid() + " to " + newEmail);
 

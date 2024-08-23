@@ -28,9 +28,13 @@ import java.util.List;
 @Repository
 public interface DelegationDao extends JpaRepository<DelegationEntry, String> {
 
-    DelegationEntry findOne(String uid);
+    DelegationEntry findByUid(String uid);
 
-    void delete(String uid);
+    void deleteByUid(String uid);
+
+    void delete(DelegationEntry delegationEntry);
 
     List<DelegationEntry> findAll();
+
+    DelegationEntry save(DelegationEntry delegationEntry);
 }

@@ -96,7 +96,7 @@ public class DelegationController {
 
         // TODO test if uid correspond to connected user if request came from delegated
         // admin
-        return this.delegationDao.findOne(uid).toJSON().toString();
+        return this.delegationDao.findByUid(uid).toJSON().toString();
     }
 
     @RequestMapping(value = REQUEST_MAPPING
@@ -135,7 +135,7 @@ public class DelegationController {
             throws JSONException, IOException, DataServiceException {
 
         // TODO deny if request came from delegated admin
-        this.delegationDao.delete(uid);
+        this.delegationDao.deleteByUid(uid);
         this.roleDao.deleteUser("ORGADMIN", accountDao.findByUID(uid));
         return new JSONObject().put("result", "ok").toString();
     }

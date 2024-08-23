@@ -45,4 +45,6 @@ public interface AdminLogDao extends JpaRepository<AdminLogEntry, Long> {
 
     List<AdminLogEntry> findAll();
 
+    AdminLogEntry save(AdminLogEntry entry);
+
 }

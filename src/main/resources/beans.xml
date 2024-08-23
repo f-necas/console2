@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+            http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/data/jpa
+            http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+            http://www.springframework.org/schema/context
+            http://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/security
+            http://www.springframework.org/schema/security/spring-security.xsd
+            http://www.springframework.org/schema/mvc
+            http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+  <context:component-scan
+          base-package="org.georchestra.console2.ws.backoffice" use-default-filters="false">
+    <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    <context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+  </context:component-scan>
+
+  <security:global-method-security pre-post-annotations="enabled" >
+    <security:expression-handler ref="expressionHandler"/>
+  </security:global-method-security>
+
+
+  <bean id="expressionHandler" class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+      <property name="permissionEvaluator" ref="consolePermissionEvaluator"/>
+  </bean>
+
+  <bean id="consolePermissionEvaluator" class="org.georchestra.console2.ConsolePermissionEvaluator" />
+
+  <!-- Directory to scan for repository classes -->
+  <jpa:repositories base-package="org.georchestra.console2.dao" />
+
+  <context:annotation-config/>
+
+  <context:property-placeholder location="file:${georchestra.datadir}/default.properties, file:${georchestra.datadir}/console/console.properties, file:${georchestra.datadir}/console/protectedroles.properties" ignore-resource-not-found="false" ignore-unresolvable="false" />
+
+  <context:component-scan base-package="org.georchestra.console2"/>
+  <context:component-scan base-package="org.georchestra.ds"/>
+
+  <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" p:prefix="/WEB-INF/views/" p:suffix=".jsp">
+    <property name="attributes">
+      <map>
+        <entry key="headerHeight" value="${headerHeight}" />
+        <entry key="headerUrl" value="${headerUrl}" />
+        <entry key="headerScript" value="${headerScript}" />
+        <entry key="logoUrl" value="${logoUrl}" />
+        <entry key="georchestraStylesheet" value="${georchestraStylesheet:}" />
+        <entry key="competenceAreaEnabled" value="${competenceAreaEnabled:false}" />
+        <entry key="readonlyUid" value="${readonlyUid:false}" />
+        <entry key="publicContextPath" value="${publicContextPath:/console}"/>
+      </map>
+    </property>
+  </bean>
+
+  <bean id="reCaptchaActivated" class="java.lang.Boolean">
+    <constructor-arg value="${recaptcha.activated:false}" />
+  </bean>
+
+  <bean id="reCaptchaParameters" class="org.georchestra.console2.bs.ReCaptchaParameters">
+    <property name="publicKey" value="${publicKey:6LfTgF4UAAAAADphdZKi6ocxIpn9MSzt8wRBFmmd}"/>
+    <property name="privateKey" value="${privateKey:6LfTgF4UAAAAAL-FJJecf36W69hEaC4qZ1yu_s5-}"/>
+    <property name="verifyUrl" value="${verificationURL:https://www.google.com/recaptcha/api/siteverify}"/>
+  </bean>
+
+  <bean id="clock" class="java.time.Clock" factory-method="systemDefaultZone" />
+
+  <bean id="privacyPolicyAgreementActivated" class="java.lang.Boolean">
+    <constructor-arg value="${privacy.policy.agreement.activated:false}" />
+  </bean>
+
+  <bean id="privacyPolicyAgreementUrl" class="java.lang.String">
+    <constructor-arg value="${privacy.policy.agreement.url:}" />
+  </bean>
+
+  <bean id="consentAgreementActivated" class="java.lang.Boolean">
+    <constructor-arg value="${data.processing.agreement.activated:false}" />
+  </bean>
+
+  <bean id="consentAgreementUrl" class="java.lang.String">
+    <constructor-arg value="${data.processing.agreement.url:}" />
+  </bean>
+
+  <!-- LDAP connection -->
+  <bean id="singleContextSource" class="org.springframework.ldap.core.support.LdapContextSource">
+    <property name="url" value="${ldapScheme}://${ldapHost}:${ldapPort}"/>
+    <property name="base" value="${ldapBaseDn}"/>
+    <property name="userDn" value="${ldapAdminDn}"/>
+    <property name="password" value="${ldapAdminPassword}"/>
+  </bean>
+
+  <bean id="ldapContextValidator" class="org.springframework.ldap.pool.validation.DefaultDirContextValidator">
+  </bean>
+
+  <bean id="contextSource" class="org.springframework.ldap.pool.factory.PoolingContextSource" destroy-method="destroy">
+    <property name="contextSource" ref="singleContextSource"/>
+    <property name="dirContextValidator" ref="ldapContextValidator"/>
+    <property name="testOnBorrow" value="${ldap.pool.testOnBorrow:true}"/>
+    <property name="maxActive" value="${ldap.pool.maxActive:8}"/>
+    <property name="minIdle" value="${ldap.pool.minIdle:1}"/>
+    <property name="maxIdle" value="${ldap.pool.maxIdle:8}"/>
+    <property name="maxTotal" value="${ldap.pool.maxTotal:-1}"/>
+    <property name="maxWait" value="${ldap.pool.maxWait:-1}"/>
+  </bean>
+
+  <bean id="ldapTemplate" class="org.springframework.ldap.core.LdapTemplate">
+    <constructor-arg ref="contextSource"/>
+  </bean>
+
+  <bean id="roleDao" class="org.georchestra.ds.roles.RoleDaoImpl">
+    <property name="ldapTemplate" ref="ldapTemplate"/>
+    <property name="roleSearchBaseDN" value="${ldapRolesRdn}"/>
+  </bean>
+
+  <bean id="orgsDao" class="org.georchestra.ds.orgs.OrgsDaoImpl">
+    <property name="ldapTemplate" ref="ldapTemplate"/>
+    <property name="basePath" value="${ldapBaseDn}"/>
+    <property name="orgTypeValues" value="${orgTypeValues:Association,Company,NGO,Individual,Other}"/>
+    <property name="orgSearchBaseDN" value="${ldapOrgsRdn}"/>
+    <property name="pendingOrgSearchBaseDN" value="${pendingOrgSearchBaseDN:ou=pendingorgs}"/>
+  </bean>
+
+  <bean id="accountDao" class="org.georchestra.ds.users.AccountDaoImpl">
+    <constructor-arg ref="ldapTemplate"/>
+    <property name="basePath" value="${ldapBaseDn}"/>
+    <property name="userSearchBaseDN" value="${ldapUsersRdn}"/>
+    <property name="pendingUserSearchBaseDN" value="${pendingUserSearchBaseDN:ou=pendingusers}"/>
+    <property name="orgSearchBaseDN" value="${ldapOrgsRdn}"/>
+    <property name="pendingOrgSearchBaseDN" value="${pendingOrgSearchBaseDN:ou=pendingorgs}"/>
+    <property name="roleSearchBaseDN" value="${ldapRolesRdn}"/>
+  </bean>
+
+  <bean id="AccountGDPRDao" class="org.georchestra.console2.ds.AccountGDPRDaoImpl"/>
+
+  <bean id="userInfoExporter" class="org.georchestra.console2.ws.backoffice.users.UserInfoExporterImpl"/>
+
+  <bean id="GDPRAccountWorker" class="org.georchestra.console2.ws.backoffice.users.GDPRAccountWorker"/>
+
+  <bean class="org.georchestra.ds.users.UserRule">
+    <property name="listOfprotectedUsers">
+      <description>Comma separated list of one or more user identifiers (uid) of protected user</description>
+        <!-- Users are defined as a comma separated list of uid and can be overridden in data dir with "protectedUsersList" key-->
+        <value>${protectedUsersList:geoserver_privileged_user}</value>
+    </property>
+  </bean>
+
+  <bean class="org.georchestra.ds.roles.RoleProtected">
+    <property name="listOfprotectedRoles">
+      <description>Comma separated list of one or more protected Roles</description>
+        <!-- Roles are defined as a comma separated list of Roles name and can be override in data dir with "protectedRolesList" key-->
+      <value>${protectedRolesList:ADMINISTRATOR,GN_.*,ORGADMIN,REFERENT,USER,SUPERUSER,IMPORT}</value>
+    </property>
+  </bean>
+
+  <bean id="userTokenDao" class="org.georchestra.console2.ds.UserTokenDao"/>
+
+  <bean id="waitForDb" class="org.georchestra.commons.WaitForDb">
+    <property name="url" value="jdbc:postgresql://${pgsqlHost}:${pgsqlPort}/${pgsqlDatabase}"/>
+    <property name="username" value="${pgsqlUser}"/>
+    <property name="password" value="${pgsqlPassword}"/>
+    <property name="driverClassName" value="org.postgresql.Driver"/>
+  </bean>
+
+<!--    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" depends-on="waitForDb">-->
+<!--        <property name="jdbcUrl" value="jdbc:postgresql://${pgsqlHost}:${pgsqlPort}/${pgsqlDatabase}"/>-->
+<!--        <property name="user" value="${pgsqlUser}"/>-->
+<!--        <property name="password" value="${pgsqlPassword}"/>-->
+<!--        <property name="driverClass" value="org.postgresql.Driver"/>-->
+<!--        <property name="initialPoolSize" value="2"/>-->
+<!--        <property name="minPoolSize" value="${dataSource.minPoolSize:2}"/>-->
+<!--        <property name="maxPoolSize" value="${dataSource.maxPoolSize:10}"/>-->
+<!--        <property name="checkoutTimeout" value = "${dataSource.timeout:1000}"/>-->
+<!--        <property name="idleConnectionTestPeriod" value="30"/>-->
+<!--        <property name="maxIdleTime" value = "${dataSource.maxIdleTime:60}"/>-->
+<!--        <property name="acquireIncrement" value="2"/>-->
+<!--        <property name="testConnectionOnCheckout" value="true"/> &lt;!&ndash; Uses JDBC4's Connection.isValid() &ndash;&gt;-->
+<!--    </bean>-->
+
+   <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+       <property name="driverClassName" value="org.postgresql.Driver"/>
+       <property name="url" value="jdbc:postgresql://${pgsqlHost}:${pgsqlPort}/${pgsqlDatabase}"/>
+       <property name="username" value="${pgsqlUser}"/>
+       <property name="password" value="${pgsqlPassword}"/>
+   </bean>
+
+<!--   <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">-->
+<!--       <property name="dataSource" ref="dataSource" />-->
+<!--       <property name="persistenceUnitName" value="myPU" />-->
+<!--       <property name="persistenceXmlLocation" value="classpath:persistence.xml"/>-->
+<!--       <property name="jpaVendorAdapter">-->
+<!--           <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />-->
+<!--       </property>-->
+<!--       <property name="jpaProperties">-->
+<!--           <props>-->
+<!--               <prop key="hibernate.dialect">org.hibernate.dialect.PostgreSQL94Dialect</prop>-->
+<!--               <prop key="hibernate.show_sql">false</prop>-->
+<!--               <prop key="hibernate.format_sql">false</prop>-->
+<!--               <prop key="hibernate.hbm2ddl.auto">update</prop>-->
+<!--           </props>-->
+<!--       </property>-->
+<!--   </bean>-->
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+
+  <bean id="advancedDelegationDao" class="org.georchestra.console2.dao.AdvancedDelegationDao"/>
+
+  <bean id="expiredTokenCleanTask" class="org.georchestra.console2.bs.ExpiredTokenCleanTask"/>
+
+  <!-- Resolves localized messages*.properties and application.properties
+		files in the application to allow for internationalization.
+
+		The messages*.properties files translate Roo generated messages which are part
+		of the admin interface, the application.properties resource bundle localizes
+		all application specific messages such as entity names and menu items.
+  -->
+  <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource"
+    p:basenames="WEB-INF/i18n/messages,WEB-INF/i18n/application"
+    p:defaultEncoding="UTF-8"
+    p:fallbackToSystemLocale="false" />
+
+  <bean id="localeChangeInterceptor" class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"/>
+
+  <!-- Store preferred language configuration in a cookie -->
+<!--  <bean class="org.springframework.web.servlet.i18n.CookieLocaleResolver" id="localeResolver" p:cookieName="locale"/>-->
+
+  <!-- Resolves localized <theme_name>.properties files in the classpath to allow for theme support -->
+  <bean class="org.springframework.ui.context.support.ResourceBundleThemeSource" id="themeSource"/>
+
+  <!-- Store preferred theme configuration in a cookie -->
+<!--  <bean class="org.springframework.web.servlet.theme.CookieThemeResolver" id="themeResolver" p:cookieName="theme" p:defaultThemeName="standard"/>-->
+
+  <!-- This bean resolves specific types of exceptions to corresponding logical
+        - view names for error views. The default behaviour of DispatcherServlet
+        - is to propagate all exceptions to the servlet container: this will happen
+        - here with all other types of exceptions.
+  -->
+  <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver" p:defaultErrorView="uncaughtException">
+    <property name="exceptionMappings">
+      <props>
+        <prop key=".DataAccessException">dataAccessFailure</prop>
+        <prop key=".NoSuchRequestHandlingMethodException">resourceNotFound</prop>
+        <prop key=".TypeMismatchException">resourceNotFound</prop>
+        <prop key=".MissingServletRequestParameterException">resourceNotFound</prop>
+      </props>
+    </property>
+  </bean>
+
+  <!-- Email Factory configuration -->
+  <bean id="emailFactory" class="org.georchestra.console2.mailservice.EmailFactory" >
+    <property name="smtpHost" value="${smtpHost}"/>
+    <property name="smtpPort" value="${smtpPort}"/>
+    <property name="emailHtml" value="${emailHtml:false}"/>
+    <property name="replyTo" value="${replyTo:${administratorEmail}}"/>
+    <property name="from" value="${from:${administratorEmail}}"/>
+    <property name="bodyEncoding" value="UTF-8"/>
+    <property name="subjectEncoding" value="UTF-8"/>
+    <property name="templateEncoding" value="${templateEncoding:UTF-8}"/>
+    <property name="accountWasCreatedEmailFile" value="newaccount-was-created-template.txt"/>
+    <property name="accountWasCreatedEmailSubject" value="${subject.account.created:[${instanceName}] Your account has been created}"/>
+    <property name="accountCreationInProcessEmailFile" value="account-creation-in-progress-template.txt"/>
+    <property name="accountCreationInProcessEmailSubject" value="${subject.account.in.process:[${instanceName}] Your new account is waiting for validation}"/>
+    <property name="newAccountRequiresModerationEmailFile" value="newaccount-requires-moderation-template.txt"/>
+    <property name="newAccountRequiresModerationEmailSubject" value="${subject.requires.moderation:[${instanceName}] New account waiting for validation}"/>
+    <property name="changePasswordEmailFile" value="changepassword-email-template.txt"/>
+    <property name="changePasswordEmailSubject" value="${subject.change.password:[${instanceName}] Update your password}"/>
+    <property name="changePasswordOAuth2EmailFile" value="changepasswordoauth2-email-template.txt"/>
+    <property name="changePasswordOAuth2EmailSubject" value="${subject.change.password-oauth2:[${instanceName}] Update your password}"/>
+    <property name="changeEmailAddressEmailFile" value="changeemail-email-template.txt"/>
+    <property name="changeEmailAddressEmailSubject" value="${subject.change.email:[${instanceName}] Update your e-mail address}"/>
+    <property name="accountUidRenamedEmailFile" value="account-uid-renamed.txt" />
+    <property name="accountUidRenamedEmailSubject" value="${subject.account.uid.renamed:[${instanceName}] New login for your account}" />
+    <property name="newAccountNotificationEmailFile" value="newaccount-notification-template.txt"/>
+    <property name="newOAuth2AccountNotificationEmailFile" value="new-oauth2-account-notification-template.txt"/>
+    <property name="newAccountNotificationEmailSubject" value="${subject.new.account.notification:[${instanceName}] New account created}"/>
+    <property name="newOAuth2AccountNotificationEmailSubject" value="${subject.new.oauth2account.notification:[${instanceName}] New OAuth2 account created}"/>
+    <property name="publicUrl" value="https://${domainName}"/>
+    <property name="instanceName" value="${instanceName}"/>
+    <property name="administratorEmail" value="${administratorEmail}"/>
+  </bean>
+
+  <bean id="moderatedSignup" class="java.lang.Boolean">
+    <constructor-arg value="${moderatedSignup:true}" />
+  </bean>
+
+  <bean id="expiredTokenManagement" class="org.georchestra.console2.bs.ExpiredTokenManagement">
+    <property name="delayInDays" value="${delayInDays:1}"/>
+  </bean>
+
+  <bean id="validation" class="org.georchestra.console2.ws.utils.Validation">
+    <constructor-arg value="${requiredFields:firstName,surname,org,orgType}" name="requiredFields" type="java.lang.String"/>
+  </bean>
+
+  <bean id="warnUserIfUidModified" class="java.lang.Boolean">
+    <constructor-arg value="${warnUserIfUidModified:true}" />
+  </bean>
+
+  <bean id="georchestraConfiguration" class="org.georchestra.commons.configuration.GeorchestraConfiguration">
+    <constructor-arg value="console"/>
+  </bean>
+
+  <bean id="passwordUtils" class="org.georchestra.console2.ws.utils.PasswordUtils">
+    <property value="${password.minimumLength:8}" name="minimumLength"/>
+    <property value="${password.requireLowers:false}" name="requireLowers"/>
+    <property value="${password.requireUppers:false}" name="requireUppers"/>
+    <property value="${password.requireDigits:false}" name="requireDigits"/>
+    <property value="${password.requireSpecials:false}" name="requireSpecials"/>
+  </bean>
+
+<!--  <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">-->
+<!--    <property name="favorPathExtension" value="false" />-->
+<!--  </bean>-->
+
+<!--  <bean id="multipartResolver"-->
+<!--        class="org.springframework.web.multipart.commons.CommonsMultipartResolver">-->
+<!--    <property name="maxUploadSize" value="${maxUploadSize:8388608}"/>-->
+<!--    <property name="maxInMemorySize" value="${maxInMemorySize:10240}"/>-->
+<!--  </bean>-->
+
+  <bean id="logUtils" class="org.georchestra.console2.ws.utils.LogUtils"/>
+
+  <bean id="areasService" class="org.georchestra.console2.bs.areas.AreasService" init-method="initialize">
+    <constructor-arg ref="orgsDao"/>
+    <constructor-arg ref="georchestraConfiguration"/>
+    <constructor-arg value="${AreasUrl:cities.geojson}"/>
+  </bean>
+
+</beans>

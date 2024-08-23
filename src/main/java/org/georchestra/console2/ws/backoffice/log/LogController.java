@@ -20,7 +20,6 @@
 package org.georchestra.console2.ws.backoffice.log;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -35,8 +34,6 @@ import org.georchestra.console2.model.AdminLogEntry;
 import org.georchestra.console2.model.DelegationEntry;
 import org.georchestra.ds.orgs.OrgsDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -104,7 +101,7 @@ public class LogController {
         // Filter logs by orgs users if user is not SUPERUSER
         if (!auth.getAuthorities().contains(ROLE_SUPERUSER)) {
             List<String> users = new ArrayList<String>();
-            DelegationEntry delegation = this.delegationDao.findOne(auth.getName());
+            DelegationEntry delegation = this.delegationDao.findByUid(auth.getName());
             String[] orgs = delegation.getOrgs();
             for (String org : orgs)
                 users.addAll(this.orgsDao.findByCommonName(org).getMembers());

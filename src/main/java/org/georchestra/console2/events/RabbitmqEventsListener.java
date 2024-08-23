@@ -12,7 +12,7 @@ import org.springframework.amqp.core.MessageListener;
 import org.georchestra.console2.model.AdminLogType;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import jakarta.mail.MessagingException;
+//import jakarta.mail.MessagingException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -68,8 +68,8 @@ public class RabbitmqEventsListener implements MessageListener {
                         "new OAuth2 account creation notification for " + email + " has been received by console");
             } catch (DataServiceException e) {
                 throw new RuntimeException(e);
-            } catch (MessagingException e) {
-                throw new RuntimeException(e);
+//            } catch (MessagingException e) {
+//                throw new RuntimeException(e);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

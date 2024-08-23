@@ -193,7 +193,7 @@ public class RolesController {
             res = this.roleDao.findByCommonName(cn);
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (!auth.getAuthorities().contains(ROLE_SUPERUSER)) {
-            if (!Arrays.asList(this.delegationDao.findOne(auth.getName()).getRoles()).contains(cn))
+            if (!Arrays.asList(this.delegationDao.findByUid(auth.getName()).getRoles()).contains(cn))
                 throw new AccessDeniedException("Role not under delegation");
             res.getUserList().retainAll(this.advancedDelegationDao.findUsersUnderDelegation(auth.getName()));
         }
@@ -477,7 +477,7 @@ public class RolesController {
         Set<String> usersUnderDelegation = this.advancedDelegationDao.findUsersUnderDelegation(delegatedAdmin);
         if (!usersUnderDelegation.containsAll(users))
             throw new AccessDeniedException("Some users are not under delegation");
-        DelegationEntry delegation = this.delegationDao.findOne(delegatedAdmin);
+        DelegationEntry delegation = this.delegationDao.findByUid(delegatedAdmin);
         if (!Arrays.asList(delegation.getRoles()).containsAll(putRole))
             throw new AccessDeniedException("Some roles are not under delegation (put)");
         if (!Arrays.asList(delegation.getRoles()).containsAll(deleteRole))

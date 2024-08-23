@@ -16,6 +16,7 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 
+
 public class ConsolePermissionEvaluator implements PermissionEvaluator {
 
     private static GrantedAuthority ROLE_SUPERUSER = new SimpleGrantedAuthority("ROLE_SUPERUSER");
@@ -32,7 +33,7 @@ public class ConsolePermissionEvaluator implements PermissionEvaluator {
             return true;
         } else {
             String username = authentication.getName();
-            DelegationEntry delegation = delegationDao.findOne(username);
+            DelegationEntry delegation = delegationDao.findByUid(username);
             if (delegation == null) {
                 return false;
             }
