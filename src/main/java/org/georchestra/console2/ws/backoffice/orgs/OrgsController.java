@@ -81,7 +81,7 @@ public class OrgsController {
     private static final String REQUEST_MAPPING = BASE_MAPPING + "/" + BASE_RESOURCE;
     private static final String PUBLIC_REQUEST_MAPPING = "/public/" + BASE_RESOURCE;
 
-    private static GrantedAuthority ROLE_SUPERUSER = new SimpleGrantedAuthority("ROLE_SUPERUSER");
+    private static final GrantedAuthority ROLE_SUPERUSER = new SimpleGrantedAuthority("ROLE_SUPERUSER");
 
     @Autowired
     private OrgsDao orgDao;

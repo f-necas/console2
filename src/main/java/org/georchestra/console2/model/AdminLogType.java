@@ -61,9 +61,9 @@ public enum AdminLogType {
     USER_PASSWORD_CHANGED("Password was changed for a user"), USER_EMAIL_CHANGED("Email was changed for a user"),
     OAUTH2_USER_CREATED("An OAuth2 user was created");
 
-    private String name;
+    private final String name;
 
-    private AdminLogType(String name) {
+    AdminLogType(String name) {
         this.name = name;
     }
 

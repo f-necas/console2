@@ -35,8 +35,8 @@ import org.json.JSONObject;
  */
 public class RoleResponse {
 
-    private Role role;
-    private ProtectedUserFilter filter;
+    private final Role role;
+    private final ProtectedUserFilter filter;
 
     public RoleResponse(Role role, ProtectedUserFilter filter) {
 

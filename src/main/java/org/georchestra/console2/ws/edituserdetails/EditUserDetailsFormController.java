@@ -74,7 +74,7 @@ public class EditUserDetailsFormController {
     private final OrgsDao orgsDao;
     private final AccountDao accountDao;
 
-    private Validation validation;
+    private final Validation validation;
 
     private @Value("${gdpr.allowAccountDeletion:true}") Boolean gdprAllowAccountDeletion;
 

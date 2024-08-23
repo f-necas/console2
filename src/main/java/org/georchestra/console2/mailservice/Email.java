@@ -43,22 +43,22 @@ public class Email {
 
     protected static final Log LOG = LogFactory.getLog(Email.class.getName());
 
-    private String smtpHost;
-    private int smtpPort;
-    private boolean emailHtml;
-    private String replyTo;
-    private String from;
-    private String bodyEncoding;
-    private String subjectEncoding;
-    private String templateEncoding;
-    private List<String> recipients;
-    private String subject;
+    private final String smtpHost;
+    private final int smtpPort;
+    private final boolean emailHtml;
+    private final String replyTo;
+    private final String from;
+    private final String bodyEncoding;
+    private final String subjectEncoding;
+    private final String templateEncoding;
+    private final List<String> recipients;
+    private final String subject;
     private String emailBody;
 
-    private String publicUrl;
-    private String instanceName;
-    private GeorchestraConfiguration georConfig;
-    private ServletContext servletContext;
+    private final String publicUrl;
+    private final String instanceName;
+    private final GeorchestraConfiguration georConfig;
+    private final ServletContext servletContext;
 
     public Email(List<String> recipients, String emailSubject, String smtpHost, int smtpPort, boolean emailHtml,
             String replyTo, String from, String bodyEncoding, String subjectEncoding, String templateEncoding,

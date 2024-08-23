@@ -331,7 +331,7 @@ public class EmailController {
                 + this.extractAddress("cc", payload) + " bcc=" + this.extractAddress("bcc", payload) + " roles="
                 + secRoles);
 
-        LOG.debug("EMail request : " + payload.toString());
+        LOG.debug("EMail request : " + payload);
 
         // Instanciate MimeMessage
 /*        MimeMessage message = this.emailFactory.createEmptyMessage();
@@ -445,7 +445,7 @@ public class EmailController {
     private void checkAuthorisation(String recipient) {
         // check if recipient is under delegation for delegated admins
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (!auth.getAuthorities().contains(this.advancedDelegationDao.ROLE_SUPERUSER))
+        if (!auth.getAuthorities().contains(AdvancedDelegationDao.ROLE_SUPERUSER))
             if (!this.advancedDelegationDao.findUsersUnderDelegation(auth.getName()).contains(recipient))
                 throw new AccessDeniedException("User " + recipient + " not under delegation");
     }

@@ -44,8 +44,8 @@ public class UserInfoExporterImpl implements UserInfoExporter {
     private @Value("${ldapAdminPassword:secret}") String ldapPassword;
     private @Value("${ldapUsersRdn:ou=users},${ldapBaseDn:dc=georchestra,dc=org}") String userSearchBaseDn;
 
-    private AccountDao accountDao;
-    private OrgsDao orgsDao;
+    private final AccountDao accountDao;
+    private final OrgsDao orgsDao;
 
     public @Autowired UserInfoExporterImpl(AccountDao accountDao, OrgsDao orgsDao) {
         this.accountDao = accountDao;

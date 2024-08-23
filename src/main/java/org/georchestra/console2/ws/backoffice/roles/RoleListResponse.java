@@ -37,8 +37,8 @@ import org.json.JSONObject;
 
 final class RoleListResponse {
 
-    private List<Role> roleList;
-    private ProtectedUserFilter filter;
+    private final List<Role> roleList;
+    private final ProtectedUserFilter filter;
 
     public RoleListResponse(List<Role> list, ProtectedUserFilter filter) {
         this.roleList = list;

@@ -224,7 +224,7 @@ public class GDPRAccountWorker {
         return zip.toPath();
     }
 
-    private static interface ContentProducer<T> extends Consumer<T>, AutoCloseable {
+    private interface ContentProducer<T> extends Consumer<T>, AutoCloseable {
         static <V, R> R ifNonNull(@Nullable V value, Function<V, R> mapper) {
             return value == null ? null : mapper.apply(value);
         }
@@ -232,8 +232,8 @@ public class GDPRAccountWorker {
 
     private static abstract class CsvContentProducer<T> implements ContentProducer<T> {
 
-        private Path csvFile;
-        private CSVPrinter csvWriter;
+        private final Path csvFile;
+        private final CSVPrinter csvWriter;
 
         static final CSVFormat FORMAT = CSVFormat.RFC4180.withQuoteMode(QuoteMode.MINIMAL);
 

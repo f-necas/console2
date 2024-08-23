@@ -52,9 +52,9 @@ import lombok.Setter;
 @Controller
 public class AreaOfCompetenceController {
 
-    private AccountDao accountDao;
-    private AreasService areas;
-    private ObjectMapper objectMapper;
+    private final AccountDao accountDao;
+    private final AreasService areas;
+    private final ObjectMapper objectMapper;
 
     @VisibleForTesting
     @Setter(value = AccessLevel.PACKAGE)

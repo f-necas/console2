@@ -27,13 +27,13 @@ package org.georchestra.console2.ds;
  */
 interface DatabaseSchema {
 
-    final static String TABLE_USER_TOKEN = "user_token";
-    final static String SCHEMA_NAME = "console";
+    String TABLE_USER_TOKEN = "user_token";
+    String SCHEMA_NAME = "console";
 
     // columns
-    final static String UID_COLUMN = "uid";
-    final static String TOKEN_COLUMN = "token";
-    final static String ADDITIONAL_INFO = "additional_info";
-    final static String CREATION_DATE_COLUMN = "creation_date";
+    String UID_COLUMN = "uid";
+    String TOKEN_COLUMN = "token";
+    String ADDITIONAL_INFO = "additional_info";
+    String CREATION_DATE_COLUMN = "creation_date";
 
 }

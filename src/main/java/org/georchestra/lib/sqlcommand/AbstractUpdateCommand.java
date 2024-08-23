@@ -54,7 +54,7 @@ public abstract class AbstractUpdateCommand extends AbstractDataCommand {
                 int updatedRows = pStmt.executeUpdate();
                 connection.commit();
                 if (updatedRows < 1) {
-                    throw new DataCommandException("Database update produced no changes: " + pStmt.toString());
+                    throw new DataCommandException("Database update produced no changes: " + pStmt);
                 }
             } catch (SQLException statementError) {
                 connection.rollback();

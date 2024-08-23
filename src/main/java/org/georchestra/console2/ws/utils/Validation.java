@@ -45,8 +45,8 @@ import org.springframework.validation.Errors;
  */
 public class Validation {
 
-    private Set<String> requiredUserFields;
-    private Set<String> requiredOrgFields;
+    private final Set<String> requiredUserFields;
+    private final Set<String> requiredOrgFields;
 
     /**
      * Create a validation class with field list formated as comma separated list.

@@ -52,7 +52,7 @@ public class LogController {
 
     private static final String BASE_MAPPING = "/private";
     private static final String REQUEST_MAPPING = BASE_MAPPING + "/admin_logs";
-    private static GrantedAuthority ROLE_SUPERUSER = new SimpleGrantedAuthority("ROLE_SUPERUSER");
+    private static final GrantedAuthority ROLE_SUPERUSER = new SimpleGrantedAuthority("ROLE_SUPERUSER");
 
     @Autowired
     private AdminLogDao logDao;

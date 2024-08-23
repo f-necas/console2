@@ -49,7 +49,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class HomeController {
 
     private static final Log LOG = LogFactory.getLog(HomeController.class.getName());
-    private ExpiredTokenManagement tokenManagement;
+    private final ExpiredTokenManagement tokenManagement;
 
     @Value("${publicContextPath:/console}")
     private String publicContextPath;

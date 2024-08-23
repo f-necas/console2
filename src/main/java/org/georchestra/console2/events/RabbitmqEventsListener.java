@@ -19,19 +19,20 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Setter
 public class RabbitmqEventsListener implements MessageListener {
 
-    private @Autowired @Setter LogUtils logUtils;
+    private @Autowired LogUtils logUtils;
 
-    private @Autowired @Setter RoleDao roleDao;
+    private @Autowired RoleDao roleDao;
 
-    private @Autowired @Setter AccountDao accountDao;
+    private @Autowired AccountDao accountDao;
 
-    private @Autowired @Setter EmailFactory emailFactory;
+    private @Autowired EmailFactory emailFactory;
 
-    private @Autowired @Setter RabbitmqEventsSender rabbitmqEventsSender;
+    private @Autowired RabbitmqEventsSender rabbitmqEventsSender;
 
-    private static Set<String> synReceivedMessageUid = Collections.synchronizedSet(new HashSet<String>());
+    private static final Set<String> synReceivedMessageUid = Collections.synchronizedSet(new HashSet<>());
 
     public void onMessage(Message message) {
         String messageBody = new String(message.getBody());
@@ -39,7 +40,7 @@ public class RabbitmqEventsListener implements MessageListener {
         String uid = jsonObj.getString("uid");
         String subject = jsonObj.getString("subject");
 
-        if (subject.equals("OAUTH2-ACCOUNT-CREATION") && !synReceivedMessageUid.stream().anyMatch(s -> s.equals(uid))) {
+        if (subject.equals("OAUTH2-ACCOUNT-CREATION") && synReceivedMessageUid.stream().noneMatch(s -> s.equals(uid))) {
             try {
                 String fullName = jsonObj.getString("fullName");
                 String localUid = jsonObj.getString("localUid");

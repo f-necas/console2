@@ -140,7 +140,7 @@ public final class FileUtils {
         }
     }
 
-    public static void moveFile(File from, File to) throws FileNotFoundException, IOException {
+    public static void moveFile(File from, File to) throws IOException {
         if (!from.renameTo(to)) {
             FileInputStream in = new FileInputStream(from);
             FileOutputStream out = new FileOutputStream(to);

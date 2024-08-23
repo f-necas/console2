@@ -113,7 +113,7 @@ public class RolesController {
     private DelegationDao delegationDao;
 
     private RoleDao roleDao;
-    private ProtectedUserFilter filter;
+    private final ProtectedUserFilter filter;
 
     /**
      * Builds a JSON response in case of error.
@@ -403,15 +403,11 @@ public class RolesController {
             ResponseUtil.buildResponse(response, ResponseUtil.buildResponseMessage(Boolean.FALSE, NOT_FOUND),
                     HttpServletResponse.SC_NOT_FOUND);
 
-            return;
-
         } catch (DuplicatedCommonNameException e) {
 
             String jsonResponse = ResponseUtil.buildResponseMessage(Boolean.FALSE, DUPLICATED_COMMON_NAME);
 
             ResponseUtil.buildResponse(response, jsonResponse, HttpServletResponse.SC_CONFLICT);
-
-            return;
 
         } catch (DataServiceException e) {
             LOG.error(e.getMessage());

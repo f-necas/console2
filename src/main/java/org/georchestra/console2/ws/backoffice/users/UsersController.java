@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 
 //import jakarta.mail.MessagingException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -79,7 +80,6 @@ import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -105,12 +105,12 @@ public class UsersController {
     private static final String BASE_MAPPING = "/private";
     private static final String REQUEST_MAPPING = BASE_MAPPING + "/users";
     private static final String PUBLIC_REQUEST_MAPPING = "/public/users";
-    private static GrantedAuthority ROLE_SUPERUSER = AdvancedDelegationDao.ROLE_SUPERUSER;
+    private static final GrantedAuthority ROLE_SUPERUSER = AdvancedDelegationDao.ROLE_SUPERUSER;
 
     @Value("${gdpr.allowAccountDeletion:true}")
     private @Setter Boolean gdprAllowAccountDeletion;
 
-    private AccountDao accountDao;
+    private final AccountDao accountDao;
 
     @Autowired
     private @Setter OrgsDao orgDao;
@@ -130,7 +130,7 @@ public class UsersController {
     @Autowired
     private @Setter Boolean warnUserIfUidModified = false;
 
-    private UserRule userRule;
+    private final UserRule userRule;
 
     @Autowired
     private @Setter EmailFactory emailFactory;
@@ -203,10 +203,11 @@ public class UsersController {
      * </p>
      *
      */
+    @Operation(summary = "Get user by his uid")
     @RequestMapping(value = REQUEST_MAPPING
             + "/{uid:.+}", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
     @ResponseBody
-    public Account findByUid(@PathVariable String uid)
+    public Account findByUid(@Parameter(description = "uid of user: e.g testadmin") @PathVariable String uid)
             throws AccessDeniedException, NameNotFoundException, DataServiceException {
 
         // Check for protected accounts

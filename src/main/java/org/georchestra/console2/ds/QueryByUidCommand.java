@@ -47,14 +47,12 @@ class QueryByUidCommand extends org.georchestra.lib.sqlcommand.AbstractQueryComm
      */
     private String getSQLStatement() {
 
-        StringBuilder sql = new StringBuilder();
+        String sql = " SELECT " + DatabaseSchema.UID_COLUMN + "," + DatabaseSchema.TOKEN_COLUMN +
+                "," + DatabaseSchema.CREATION_DATE_COLUMN + "," +
+                DatabaseSchema.ADDITIONAL_INFO + " FROM " +
+                DatabaseSchema.SCHEMA_NAME + "." + DatabaseSchema.TABLE_USER_TOKEN + " WHERE uid = ?";
 
-        sql.append(" SELECT ").append(DatabaseSchema.UID_COLUMN).append(",").append(DatabaseSchema.TOKEN_COLUMN)
-                .append(",").append(DatabaseSchema.CREATION_DATE_COLUMN).append(",")
-                .append(DatabaseSchema.ADDITIONAL_INFO).append(" FROM ")
-                .append(DatabaseSchema.SCHEMA_NAME + "." + DatabaseSchema.TABLE_USER_TOKEN).append(" WHERE uid = ?");
-
-        return sql.toString();
+        return sql;
     }
 
     /**

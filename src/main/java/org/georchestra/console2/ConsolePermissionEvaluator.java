@@ -19,7 +19,7 @@ import java.util.List;
 
 public class ConsolePermissionEvaluator implements PermissionEvaluator {
 
-    private static GrantedAuthority ROLE_SUPERUSER = new SimpleGrantedAuthority("ROLE_SUPERUSER");
+    private static final GrantedAuthority ROLE_SUPERUSER = new SimpleGrantedAuthority("ROLE_SUPERUSER");
 
     @Autowired
     private DelegationDao delegationDao;
@@ -39,22 +39,19 @@ public class ConsolePermissionEvaluator implements PermissionEvaluator {
             }
 
             // Filter based on object type
-            if (targetDomainObject instanceof Role) {
+            if (targetDomainObject instanceof Role r) {
                 // Filter users in role and role itself
-                Role r = (Role) targetDomainObject;
                 List<String> userList = r.getUserList();
                 // Remove users not under delegation
                 userList.retainAll(this.advancedDelegationDao.findUsersUnderDelegation(username));
                 r.setFavorite(true);
                 // Remove role not under delegation
                 return Arrays.asList(delegation.getRoles()).contains(r.getName());
-            } else if (targetDomainObject instanceof Org) {
+            } else if (targetDomainObject instanceof Org org) {
                 // Filter org
-                Org org = (Org) targetDomainObject;
                 return Arrays.asList(delegation.getOrgs()).contains(org.getId());
-            } else if (targetDomainObject instanceof SimpleAccount) {
+            } else if (targetDomainObject instanceof SimpleAccount account) {
                 // filter account
-                SimpleAccount account = (SimpleAccount) targetDomainObject;
                 return Arrays.asList(delegation.getOrgs()).contains(account.getOrgId());
             }
         }
@@ -65,10 +62,7 @@ public class ConsolePermissionEvaluator implements PermissionEvaluator {
     @Override
     public boolean hasPermission(Authentication authentication, Serializable targetId, String targetType,
             Object permission) {
-        if (isSuperAdministrator(authentication)) {
-            return true;
-        }
-        return false;
+        return isSuperAdministrator(authentication);
     }
 
     private boolean isSuperAdministrator(Authentication authentication) {

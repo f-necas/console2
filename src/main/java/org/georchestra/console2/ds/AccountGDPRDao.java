@@ -35,7 +35,7 @@ import lombok.Value;
  */
 public interface AccountGDPRDao {
 
-    static final String DELETED_ACCOUNT_USERNAME = "_deleted_account_";
+    String DELETED_ACCOUNT_USERNAME = "_deleted_account_";
 
     /**
      * Deletes all GDPR sensitive records for the given account and returns a

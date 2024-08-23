@@ -52,8 +52,8 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 @SessionAttributes(types = EditOrgDetailsFormBean.class)
 public class EditOrgDetailsFormController {
-    private OrgsDao orgsDao;
-    private Validation validation;
+    private final OrgsDao orgsDao;
+    private final Validation validation;
     private static final String[] FIELDS = { "id", "url", "description", "logo", "name", "address", "mail" };
 
     private static final Log LOG = LogFactory.getLog(EditOrgDetailsFormController.class.getName());

@@ -104,34 +104,34 @@ public final class NewAccountFormController {
     private AdvancedDelegationDao advancedDelegationDao;
 
     @Autowired
-    protected PasswordUtils passwordUtils;
+    private PasswordUtils passwordUtils;
 
     @Autowired
     private boolean moderatedSignup = true;
 
     @Autowired
-    protected boolean reCaptchaActivated;
-    private ReCaptchaParameters reCaptchaParameters;
+    private boolean reCaptchaActivated;
+    private final ReCaptchaParameters reCaptchaParameters;
 
     @Autowired
-    protected boolean privacyPolicyAgreementActivated;
+    private boolean privacyPolicyAgreementActivated;
 
     @Autowired
-    protected String privacyPolicyAgreementUrl;
+    private String privacyPolicyAgreementUrl;
 
     @Autowired
-    protected boolean consentAgreementActivated;
+    private boolean consentAgreementActivated;
 
     @Autowired
-    protected String consentAgreementUrl;
+    private String consentAgreementUrl;
 
     @Autowired
-    protected LogUtils logUtils;
+    private LogUtils logUtils;
 
     @Autowired
-    protected Clock clock;
+    private Clock clock;
 
-    private Validation validation;
+    private final Validation validation;
 
     @Value("${publicContextPath:/console}")
     private String publicContextPath;
@@ -205,7 +205,7 @@ public final class NewAccountFormController {
         }
         // Convert to camelcase with 'org' prefix 'shortName' --> 'orgShortName'
         for (String f : validation.getRequiredOrgFields()) {
-            session.setAttribute("org" + f.substring(0, 1).toUpperCase() + f.substring(1, f.length()) + "Required",
+            session.setAttribute("org" + f.substring(0, 1).toUpperCase() + f.substring(1) + "Required",
                     "true");
         }
 

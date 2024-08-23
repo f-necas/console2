@@ -30,13 +30,13 @@ public interface DataCommand {
     /**
      * @param dataSource connection provider
      */
-    public void setDataSource(DataSource dataSource);
+    void setDataSource(DataSource dataSource);
 
     /**
      * Execute the sql command specified
      *
      * @throws DataCommandException
      */
-    public void execute() throws DataCommandException;
+    void execute() throws DataCommandException;
 
 }

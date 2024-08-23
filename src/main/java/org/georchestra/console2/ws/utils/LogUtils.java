@@ -402,8 +402,8 @@ public class LogUtils {
         }
         if (modified.getManager() == null || original.getManager() == null) {
             // log privacy policy agreement date changed
-            oldValue = original.getManager() != null ? original.getManager().toString() : "";
-            newValue = modified.getManager() != null ? modified.getManager().toString() : "";
+            oldValue = original.getManager() != null ? original.getManager() : "";
+            newValue = modified.getManager() != null ? modified.getManager() : "";
             if (!newValue.equals(oldValue)) {
                 createAndLogDetails(target, UserSchema.MANAGER_KEY, oldValue, newValue, type);
             }

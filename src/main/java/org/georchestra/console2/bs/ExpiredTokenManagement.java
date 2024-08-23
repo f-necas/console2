@@ -49,7 +49,7 @@ public final class ExpiredTokenManagement {
     /** delay in days to execute the cleaning task */
     private int delayInDays = -1;
 
-    private ExpiredTokenCleanTask expiredTokenCleanTask;
+    private final ExpiredTokenCleanTask expiredTokenCleanTask;
 
     @Autowired
     public ExpiredTokenManagement(ExpiredTokenCleanTask expiredTokenCleanTask) {
@@ -91,7 +91,7 @@ public final class ExpiredTokenManagement {
      */
     private static long toMilliseconds(int delayInDays) {
 
-        return 24 * 3600000 * delayInDays;
+        return 24L * 3600000 * delayInDays;
     }
 
 }

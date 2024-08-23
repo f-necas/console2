@@ -73,9 +73,9 @@ public class ChangeEmailFormController {
     protected static final Log LOG = LogFactory.getLog(ChangeEmailFormController.class.getName());
 
     private final AccountDao accountDao;
-    private EmailFactory emailFactory;
+    private final EmailFactory emailFactory;
     private final UserTokenDao userTokenDao;
-    private Validation validation;
+    private final Validation validation;
 
     @Autowired
     protected LogUtils logUtils;

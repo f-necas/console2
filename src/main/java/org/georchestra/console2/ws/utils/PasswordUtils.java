@@ -34,10 +34,10 @@ import java.util.regex.Pattern;
  */
 public final class PasswordUtils {
 
-    private Pattern LOWERS_PATTERN = Pattern.compile("[a-z]");
-    private Pattern UPPERS_PATTERN = Pattern.compile("[A-Z]");
-    private Pattern DIGITS_PATTERN = Pattern.compile("[0-9]");
-    private Pattern SPECIALS_PATTERN = Pattern.compile("[^a-zA-Z0-9]");
+    private final Pattern LOWERS_PATTERN = Pattern.compile("[a-z]");
+    private final Pattern UPPERS_PATTERN = Pattern.compile("[A-Z]");
+    private final Pattern DIGITS_PATTERN = Pattern.compile("[0-9]");
+    private final Pattern SPECIALS_PATTERN = Pattern.compile("[^a-zA-Z0-9]");
 
     @Autowired
     private Validation validation;

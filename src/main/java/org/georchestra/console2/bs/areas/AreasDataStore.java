@@ -22,9 +22,9 @@ class AreasDataStore {
 
     private final FilterFactory FF = CommonFactoryFinder.getFilterFactory();
 
-    private URL geoJsonLocation;
+    private final URL geoJsonLocation;
 
-    private SimpleFeatureSource featureSource;
+    private final SimpleFeatureSource featureSource;
 
     public AreasDataStore(URL geoJson) throws IOException {
         this.geoJsonLocation = geoJson;

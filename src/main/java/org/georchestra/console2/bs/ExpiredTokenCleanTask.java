@@ -41,7 +41,7 @@ public class ExpiredTokenCleanTask implements Runnable {
 
     private static final Log LOG = LogFactory.getLog(ExpiredTokenCleanTask.class.getName());
 
-    private UserTokenDao userTokenDao;
+    private final UserTokenDao userTokenDao;
 
     private long delayInMilliseconds;
 

@@ -55,7 +55,7 @@ public class UsersExport {
 
     private @Autowired GDPRAccountWorker gdprInfoExporter;
 
-    private UserInfoExporter accountInfoExporter;
+    private final UserInfoExporter accountInfoExporter;
 
     @Autowired
     private AdvancedDelegationDao advancedDelegationDao;

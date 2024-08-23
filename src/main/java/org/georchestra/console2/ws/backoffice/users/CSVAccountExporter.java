@@ -42,7 +42,7 @@ import lombok.NonNull;
 
 public class CSVAccountExporter {
 
-    static enum OutlookCSVHeaderField {
+    enum OutlookCSVHeaderField {
         FIRST_NAME("First Name", Account::getCommonName), //
         MIDDLE_NAME("Middle Name"), //
         LAST_NAME("Last Name", Account::getSurname), //
@@ -140,17 +140,17 @@ public class CSVAccountExporter {
         private final @NonNull @Getter String name;
         private final BiFunction<Account, Org, String> valueExtractor;
 
-        private OutlookCSVHeaderField(String name) {
+        OutlookCSVHeaderField(String name) {
             this.name = name;
             this.valueExtractor = (a, o) -> null;
         }
 
-        private OutlookCSVHeaderField(@NonNull String name, @NonNull Function<Account, String> valueExtractor) {
+        OutlookCSVHeaderField(@NonNull String name, @NonNull Function<Account, String> valueExtractor) {
             this.name = name;
             this.valueExtractor = (a, o) -> valueExtractor.apply(a);
         }
 
-        private OutlookCSVHeaderField(@NonNull String name, @NonNull BiFunction<Account, Org, String> valueExtractor) {
+        OutlookCSVHeaderField(@NonNull String name, @NonNull BiFunction<Account, Org, String> valueExtractor) {
             this.name = name;
             this.valueExtractor = valueExtractor;
         }
