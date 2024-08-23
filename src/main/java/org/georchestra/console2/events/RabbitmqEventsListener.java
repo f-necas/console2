@@ -12,7 +12,7 @@ import org.springframework.amqp.core.MessageListener;
 import org.georchestra.console2.model.AdminLogType;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.mail.MessagingException;
+import jakarta.mail.MessagingException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;

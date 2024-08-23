@@ -33,21 +33,21 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.activation.DataHandler;
-import javax.mail.Address;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.Transport;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MailDateFormat;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
-import javax.mail.util.ByteArrayDataSource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.activation.DataHandler;
+//import javax.mail.Address;
+//import javax.mail.Message;
+//import javax.mail.MessagingException;
+//import javax.mail.Multipart;
+//import javax.mail.Transport;
+//import javax.mail.internet.AddressException;
+//import javax.mail.internet.InternetAddress;
+//import javax.mail.internet.MailDateFormat;
+//import javax.mail.internet.MimeBodyPart;
+//import javax.mail.internet.MimeMessage;
+//import javax.mail.internet.MimeMultipart;
+//import javax.mail.util.ByteArrayDataSource;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -84,6 +84,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 public class EmailController {
+
+    /*
+    TODO Rewrite with springframwork mail
+     */
 
     @Autowired
     private EmailDao emailRepository;
@@ -183,7 +187,7 @@ public class EmailController {
     public String sendEmail(@PathVariable String recipient, @RequestParam("subject") String subject,
             @RequestParam("content") String content, @RequestParam("attachments") String attachmentsIds,
             HttpServletRequest request, HttpServletResponse response)
-            throws NameNotFoundException, DataServiceException, MessagingException, JSONException {
+            throws NameNotFoundException, DataServiceException, JSONException {
 
         this.checkAuthorisation(recipient);
 
@@ -197,7 +201,7 @@ public class EmailController {
 
         attachmentsIds = attachmentsIds.trim();
         List<Attachment> attachments = new LinkedList<Attachment>();
-        if (attachmentsIds.length() > 0) {
+/*        if (attachmentsIds.length() > 0) {
             String[] attachmentsIdsList = attachmentsIds.split("\\s?,\\s?");
             for (String attId : attachmentsIdsList) {
                 Attachment att = this.attachmentRepo.findOne(Long.parseLong(attId));
@@ -205,7 +209,7 @@ public class EmailController {
                     throw new NameNotFoundException("Unable to find attachment with ID : " + attId);
                 attachments.add(att);
             }
-        }
+        }*/
         email.setAttachments(attachments);
         this.send(email);
         response.setContentType("application/json");
@@ -306,16 +310,16 @@ public class EmailController {
     @RequestMapping(value = "/emailProxy", method = RequestMethod.POST, produces = "application/json; charset=utf-8", consumes = "application/json")
     @ResponseBody
     public String emailProxy(@RequestBody String rawRequest, HttpServletRequest request)
-            throws JSONException, MessagingException, UnsupportedEncodingException, DataServiceException {
+            throws JSONException, UnsupportedEncodingException, DataServiceException {
 
         JSONObject payload = new JSONObject(rawRequest);
-        InternetAddress[] to = this.populateRecipient("to", payload);
+/*        InternetAddress[] to = this.populateRecipient("to", payload);
         InternetAddress[] cc = this.populateRecipient("cc", payload);
         InternetAddress[] bcc = this.populateRecipient("bcc", payload);
 
         this.checkSubject(payload);
         this.checkBody(payload);
-        this.checkRecipient(to, cc, bcc);
+        this.checkRecipient(to, cc, bcc);*/
 
         final String secUsername = SecurityHeaders.decode(request.getHeader(SEC_USERNAME));
         final String secRoles = SecurityHeaders.decode(request.getHeader(SEC_ROLES));
@@ -330,7 +334,7 @@ public class EmailController {
         LOG.debug("EMail request : " + payload.toString());
 
         // Instanciate MimeMessage
-        MimeMessage message = this.emailFactory.createEmptyMessage();
+/*        MimeMessage message = this.emailFactory.createEmptyMessage();
 
         // Generate From header
         InternetAddress from = new InternetAddress();
@@ -358,7 +362,7 @@ public class EmailController {
         message.setSentDate(new Date());
 
         // finally send message
-        Transport.send(message);
+        Transport.send(message);*/
 
         JSONObject res = new JSONObject();
         res.put("success", true);
@@ -407,7 +411,7 @@ public class EmailController {
      * @param cc  array of recipients for 'cc' field
      * @param bcc array of recipients for 'bcc' field
      */
-    private void checkRecipient(InternetAddress[] to, InternetAddress[] cc, InternetAddress[] bcc)
+/*    private void checkRecipient(InternetAddress[] to, InternetAddress[] cc, InternetAddress[] bcc)
             throws JSONException, DataServiceException {
 
         if (to.length == 0 && cc.length == 0 && bcc.length == 0)
@@ -429,7 +433,7 @@ public class EmailController {
             if (!this.recipientIsAllowed(bcc[i].getAddress()))
                 throw new IllegalArgumentException("Recipient not allowed : " + bcc[i].getAddress());
 
-    }
+    }*/
 
     /**
      * Check if recipient is under delegation for delegated admins
@@ -474,7 +478,7 @@ public class EmailController {
      * @param request full object where to search for key
      * @return java list of extracted values
      */
-    private InternetAddress[] populateRecipient(String field, JSONObject request)
+/*    private InternetAddress[] populateRecipient(String field, JSONObject request)
             throws JSONException, AddressException {
         List<InternetAddress> res = new LinkedList<InternetAddress>();
         if (request.has(field)) {
@@ -487,7 +491,7 @@ public class EmailController {
             }
         }
         return res.toArray(new InternetAddress[res.size()]);
-    }
+    }*/
 
     private boolean recipientIsAllowed(String recipient) throws DataServiceException {
         // Load configuration if not already loaded
@@ -521,9 +525,9 @@ public class EmailController {
      * @throws MessagingException    if some field of email cannot be encoded
      *                               (malformed email address)
      */
-    private void send(EmailEntry email) throws NameNotFoundException, DataServiceException, MessagingException {
+    private void send(EmailEntry email) throws NameNotFoundException, DataServiceException {
 
-        final MimeMessage message = this.emailFactory.createEmptyMessage();
+        /*final MimeMessage message = this.emailFactory.createEmptyMessage();
 
         Account recipient = this.accountDao.findByUID(email.getRecipient());
         InternetAddress[] senders = { new InternetAddress(this.accountDao.findByUID(email.getSender()).getEmail()) };
@@ -539,7 +543,7 @@ public class EmailController {
         // attachments
         for (Attachment att : email.getAttachments()) {
             MimeBodyPart mbp = new MimeBodyPart();
-            mbp.setDataHandler(new DataHandler(new ByteArrayDataSource(att.getContent(), att.getMimeType())));
+            mbp.setDataHandler(new DataHandler(att.getContent(), att.getMimeType()));
             mbp.setFileName(att.getName());
             multiPart.addBodyPart(mbp);
         }
@@ -552,7 +556,7 @@ public class EmailController {
         message.setContent(multiPart);
 
         // Send message
-        Transport.send(message);
+        Transport.send(message);*/
     }
 
     // Getter for unit tests

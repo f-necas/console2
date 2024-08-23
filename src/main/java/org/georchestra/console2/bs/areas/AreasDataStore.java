@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.geotools.api.data.Query;
 import org.geotools.api.data.SimpleFeatureSource;
 import org.geotools.api.filter.FilterFactory;
+import org.geotools.api.filter.PropertyIsEqualTo;
 import org.geotools.data.geojson.store.GeoJSONDataStore;
 import org.geotools.data.simple.SimpleFeatureCollection;
 import org.geotools.data.simple.SimpleFeatureIterator;
@@ -33,21 +34,21 @@ class AreasDataStore {
 
     public List<Geometry> findAreasById(List<String> ids) throws IOException {
 
-        String typeName = featureSource.getName().getLocalPart();
+        /*TODO String typeName = featureSource.getName().getLocalPart();
         List<Filter> filters = ids.stream().map(id -> FF.equals(FF.property("INSEE_COM"), FF.literal(id)))
                 .collect(Collectors.toList());
         Filter filter = FF.or(filters);
         Query query = new Query(typeName, filter);
-        SimpleFeatureCollection features = featureSource.getFeatures(query);
+        SimpleFeatureCollection features = featureSource.getFeatures(query);*/
         List<Geometry> areas = new ArrayList<>();
-        try (SimpleFeatureIterator it = features.features()) {
+        /*try (SimpleFeatureIterator it = features.features()) {
             while (it.hasNext()) {
                 SimpleFeature feature = it.next();
                 Geometry geom = (Geometry) feature.getDefaultGeometry();
                 if (null != geom)
                     areas.add(geom);
             }
-        }
+        }*/
         return areas;
     }
 }

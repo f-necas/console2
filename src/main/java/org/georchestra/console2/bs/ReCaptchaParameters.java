@@ -19,7 +19,7 @@
 
 package org.georchestra.console2.bs;
 
-import org.springframework.beans.factory.annotation.Required;
+//import org.springframework.beans.factory.annotation.Required;
 
 /**
  * ReCaptchaParameters attribute
@@ -40,7 +40,7 @@ public final class ReCaptchaParameters {
         return publicKey;
     }
 
-    @Required
+//    @Required
     public void setPublicKey(String publicKey) {
         this.publicKey = publicKey;
     }
@@ -49,7 +49,7 @@ public final class ReCaptchaParameters {
         return privateKey;
     }
 
-    @Required
+//    @Required
     public void setPrivateKey(String privateKey) {
         this.privateKey = privateKey;
     }
@@ -58,7 +58,7 @@ public final class ReCaptchaParameters {
         return verifyUrl;
     }
 
-    @Required
+//    @Required
     public void setVerifyUrl(String verifyUrl) {
         this.verifyUrl = verifyUrl;
     }

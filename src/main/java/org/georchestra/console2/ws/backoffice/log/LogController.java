@@ -20,10 +20,11 @@
 package org.georchestra.console2.ws.backoffice.log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -111,7 +112,8 @@ public class LogController {
                 throw new AccessDeniedException("User not under delegation");
         }
 
-        return this.logDao.findByTarget(target, new PageRequest(page, limit, new Sort(Sort.Direction.DESC, "date")));
+//  TODO      return this.logDao.findByTarget(target, new PageRequest(page, limit, new Sort(Sort.Direction.DESC, "date")));
+        return List.of();
     }
 
     @RequestMapping(value = REQUEST_MAPPING
@@ -123,12 +125,13 @@ public class LogController {
         // Filter logs by orgs users if user is not SUPERUSER
         if (!auth.getAuthorities().contains(ROLE_SUPERUSER)) {
             Set<String> users = this.advancedDelegationDao.findUsersUnderDelegation(auth.getName());
-            return this.logDao.myFindByTargets(users,
-                    new PageRequest(page, limit, new Sort(Sort.Direction.DESC, "date")));
+//            return this.logDao.myFindByTargets(users, new PageRequest(page, limit, new Sort(Sort.Direction.DESC,"date")));
+            return List.of();
         } else {
-            return this.logDao.findAll(new PageRequest(page, limit, new Sort(Sort.Direction.DESC, "date")))
-                    .getContent();
+           /* TODO return this.logDao.findAll(new PageRequest(page, limit, new Sort(Sort.Direction.DESC,"date")))
+                    .getContent();*/
         }
+        return List.of();
 
     }
 

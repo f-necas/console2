@@ -9,12 +9,13 @@ import org.springframework.security.core.userdetails.AuthenticationUserDetailsSe
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
+
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class GeorchestraUserDetailsService
         implements AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {
 
     public UserDetails loadUserDetails(PreAuthenticatedAuthenticationToken token) throws AuthenticationException {
-        Assert.notNull(token.getDetails());
+        Assert.notNull(token.getDetails(), "No details provided with authentication token");
         return createUserDetails(token, null);
     }
 

@@ -20,9 +20,17 @@
 package org.georchestra.console2.dao;
 
 import org.georchestra.console2.model.DelegationEntry;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
-public interface DelegationDao extends PagingAndSortingRepository<DelegationEntry, String> {
+public interface DelegationDao extends JpaRepository<DelegationEntry, String> {
+
+    DelegationEntry findOne(String uid);
+
+    void delete(String uid);
+
+    List<DelegationEntry> findAll();
 }

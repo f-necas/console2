@@ -19,10 +19,11 @@
 
 package org.georchestra.console2.model;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import io.hypersistence.utils.hibernate.type.array.StringArrayType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.hibernate.annotations.Type;
@@ -36,10 +37,10 @@ public class DelegationEntry {
 
     @Id
     private String uid;
-    @Type(type = "org.georchestra.console2.model.PostGresArrayStringType")
+    @Type(StringArrayType.class)
     @Column(name = "orgs", columnDefinition = "character varying[]")
     private String[] orgs;
-    @Type(type = "org.georchestra.console2.model.PostGresArrayStringType")
+    @Type(StringArrayType.class)
     @Column(name = "roles", columnDefinition = "character varying[]")
     private String[] roles;
 
