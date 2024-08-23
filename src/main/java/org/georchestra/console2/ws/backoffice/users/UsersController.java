@@ -35,6 +35,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 //import jakarta.mail.MessagingException;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.servlet.ServletInputStream;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -80,11 +81,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import lombok.Setter;
 
@@ -100,7 +97,7 @@ import lombok.Setter;
  * @author Mauricio Pazos
  *
  */
-@Controller
+@RestController
 public class UsersController {
 
     private static final Log LOG = LogFactory.getLog(UsersController.class.getName());
@@ -111,63 +108,35 @@ public class UsersController {
     private static GrantedAuthority ROLE_SUPERUSER = AdvancedDelegationDao.ROLE_SUPERUSER;
 
     @Value("${gdpr.allowAccountDeletion:true}")
-    private Boolean gdprAllowAccountDeletion;
+    private @Setter Boolean gdprAllowAccountDeletion;
 
     private AccountDao accountDao;
 
     @Autowired
-    private OrgsDao orgDao;
+    private @Setter OrgsDao orgDao;
 
     @Autowired
-    private RoleDao roleDao;
+    private @Setter RoleDao roleDao;
 
     @Autowired
-    private DelegationDao delegationDao;
+    private @Setter DelegationDao delegationDao;
 
     @Autowired
-    private AdvancedDelegationDao advancedDelegationDao;
+    private @Setter AdvancedDelegationDao advancedDelegationDao;
 
     @Autowired
     private @Setter GDPRAccountWorker gdprInfoWorker;
 
     @Autowired
-    private Boolean warnUserIfUidModified = false;
+    private @Setter Boolean warnUserIfUidModified = false;
 
     private UserRule userRule;
 
     @Autowired
-    private EmailFactory emailFactory;
+    private @Setter EmailFactory emailFactory;
 
     @Autowired
     protected LogUtils logUtils;
-
-    public void setEmailFactory(EmailFactory emailFactory) {
-        this.emailFactory = emailFactory;
-    }
-
-    public void setOrgDao(OrgsDao orgDao) {
-        this.orgDao = orgDao;
-    }
-
-    public void setDelegationDao(DelegationDao delegationDao) {
-        this.delegationDao = delegationDao;
-    }
-
-    public void setAdvancedDelegationDao(AdvancedDelegationDao advancedDelegationDao) {
-        this.advancedDelegationDao = advancedDelegationDao;
-    }
-
-    public void setRoleDao(RoleDao roleDao) {
-        this.roleDao = roleDao;
-    }
-
-    public void setWarnUserIfUidModified(boolean warnUserIfUidModified) {
-        this.warnUserIfUidModified = warnUserIfUidModified;
-    }
-
-    public void setGdprAllowAccountDeletion(Boolean gdprAllowAccountDeletion) {
-        this.gdprAllowAccountDeletion = gdprAllowAccountDeletion;
-    }
 
     @Autowired
     public UsersController(AccountDao dao, UserRule userRule) {
@@ -193,8 +162,8 @@ public class UsersController {
      *
      * @throws IOException
      */
-    @RequestMapping(value = REQUEST_MAPPING, method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-    @ResponseBody
+    @Operation(summary = "Get list of users")
+    @GetMapping(value = REQUEST_MAPPING, produces = "application/json; charset=utf-8")
     @PostFilter("hasPermission(filterObject, 'read')")
     public List<SimpleAccount> findAll() throws DataServiceException {
 

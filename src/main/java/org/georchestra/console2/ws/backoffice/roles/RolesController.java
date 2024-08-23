@@ -69,10 +69,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Web Services to maintain the Roles information.
@@ -81,7 +78,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  *
  */
 
-@Controller
+@RestController
 public class RolesController {
 
     private static final Log LOG = LogFactory.getLog(RolesController.class.getName());
@@ -249,7 +246,7 @@ public class RolesController {
      * @param response
      * @throws IOException
      */
-    @RequestMapping(value = REQUEST_MAPPING, method = RequestMethod.POST)
+    @PostMapping(value = REQUEST_MAPPING)
     @PreAuthorize("hasRole('SUPERUSER')")
     public void create(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -296,7 +293,7 @@ public class RolesController {
      * @param cn       Common name of role to delete
      * @throws IOException
      */
-    @RequestMapping(value = REQUEST_MAPPING + "/{cn:.+}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = REQUEST_MAPPING + "/{cn:.+}")
     @PreAuthorize("hasRole('SUPERUSER')")
     public void delete(HttpServletResponse response, @PathVariable String cn) throws IOException {
         try {
@@ -370,7 +367,7 @@ public class RolesController {
      * @throws IOException if the uid does not exist or fails to access to the LDAP
      *                     store.
      */
-    @RequestMapping(value = REQUEST_MAPPING + "/{cn:.+}", method = RequestMethod.PUT)
+    @PutMapping(value = REQUEST_MAPPING + "/{cn:.+}")
     @PreAuthorize("hasRole('SUPERUSER')")
     public void update(HttpServletRequest request, HttpServletResponse response, @PathVariable String cn)
             throws IOException {
@@ -433,7 +430,7 @@ public class RolesController {
      * @param response
      * @throws IOException
      */
-    @RequestMapping(value = BASE_MAPPING + "/roles_users", method = RequestMethod.POST)
+    @PostMapping(value = BASE_MAPPING + "/roles_users")
     public void updateUsers(HttpServletRequest request, HttpServletResponse response)
             throws AccessDeniedException, IOException, JSONException, DataServiceException {
 
